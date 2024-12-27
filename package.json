@@ -1,0 +1,33 @@
+{
+  "name": "cli-env-manager",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "author": {
+    "name": "Nika Nishnianidze",
+    "email": "nika.nishnianidze.10@gmail.com",
+    "url": "https://github.com/Yolosopher",
+    "github": "https://github.com/Yolosopher",
+    "website": "https://yolosopher.site"
+  },
+  "scripts": {
+    "build": "tsup src/index.ts --format cjs --dts",
+    "start": "ts-node src/index.ts"
+  },
+  "keywords": [],
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "ts-node": "^10.9.2",
+    "tsup": "^8.3.5",
+    "typescript": "^5.7.2"
+  },
+  "bin": {
+    "envmanager": "dist/index.js"
+  },
+  "dependencies": {
+    "axios": "^1.7.9",
+    "commander": "^12.1.0",
+    "dotenv": "^16.4.7"
+  }
+}
