@@ -27,12 +27,26 @@ npm run build
 npm link
 ```
 
-## Usage
+## Quick Start Guide
+
+1. First, set up your API token:
+```bash
+envmanager token set <your-api-token>
+```
+
+2. Create a new project:
+```bash
+envmanager project create "my-project"
+```
+
+3. Create an environment from a .env file:
+```bash
+envmanager environment create "my-project" "prod" -e ./prod.env
+```
+
+## Command Reference
 
 ### Token Management
-
-Before using any commands that interact with the API, you need to set your API token:
-
 ```bash
 # Set your API token
 envmanager token set <your-api-token>
@@ -40,76 +54,66 @@ envmanager token set <your-api-token>
 # View current token
 envmanager token show
 
-# Remove stored token
+# Remove token
 envmanager token remove
 ```
 
-### Project Management
-
+### Project Commands
 ```bash
-# List all projects (shows ID, name, and associated environments)
+# List all projects
 envmanager project list
 
-# Find a project by name
-envmanager project find <n>
+# Find project by name
+envmanager project find <name>
 
-# Create a new project
-envmanager project create <n>
+# Create project
+envmanager project create <name>
 
-# Delete a project
-envmanager project delete <n>
+# Delete project
+envmanager project delete <name>
 ```
 
-### Environment Management
-
+### Environment Commands
 ```bash
-# List environments for a project (shows ID, name, and project)
+# List environments
 envmanager environment list <project-name>
 
-# Create a new environment from .env file
-# Shows parsed variables before creation for verification
-envmanager environment create <project-name> [env-name] -e ./env-file.env
+# Create environment
+envmanager environment create <project-name> [env-name] -e ./file.env
 
-# Examples:
-envmanager environment create "my-project" "prod" -e ./prod.env     # Named environment
-envmanager environment create "my-project" -e ./staging.env         # Uses "staging" as name
-
-# Delete an environment (requires both project and environment names)
+# Delete environment
 envmanager environment delete <project-name> <env-name>
 
-# Download environment variables
-envmanager environment download <project-name> <env-name>           # Downloads to <env-name>.env
-envmanager environment download <project-name> <env-name> -f path   # Downloads to specified path
+# Download environment
+envmanager environment download <project-name> <env-name>          # Saves as <env-name>.env
+envmanager environment download <project-name> <env-name> -f path  # Saves to custom path
 ```
 
 ## Environment File Format
 
-When creating environments, your .env file should follow the standard format:
-
+Your .env files should follow this format:
 ```env
-# Comments are supported and will be ignored
+# Comments are supported
 DATABASE_URL=postgresql://user:pass@localhost:5432/db
 API_KEY=your-api-key
 
 # Values can contain equals signs
 COMPLEX_VALUE=key=value=something
 
-# Values can be quoted (quotes will be removed)
+# Values can be quoted
 SECRET="my secret value"
 OTHER_SECRET='another secret'
-
-# Empty lines are ignored
 ```
 
-## Token Storage Location
+## Token Storage
 
-Your API token is stored securely in:
+API tokens are stored securely in:
 - macOS/Linux: `~/.env-manager/token.json`
 - Windows: `%USERPROFILE%\.env-manager\token.json`
 
 ## Error Handling
 
-The CLI provides clear error messages for common scenarios:
+The CLI provides clear error messages for:
 - Invalid API token
 - Project not found
 - Environment not found
@@ -125,7 +129,7 @@ npm install
 # Build the project
 npm run build
 
-# Run tests (if implemented)
+# Run tests
 npm test
 
 # Link for local development
