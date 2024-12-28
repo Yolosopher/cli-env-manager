@@ -31,7 +31,6 @@ api.interceptors.request.use((config) => {
   try {
     if (fs.existsSync(CONFIG.TOKEN_FILE)) {
       const { token } = JSON.parse(fs.readFileSync(CONFIG.TOKEN_FILE, "utf8"));
-      console.log("Token:", token);
       config.headers["x-api-token"] = token;
     }
   } catch (error) {
@@ -235,7 +234,9 @@ const parseEnvFile = (filePath: string): Record<string, string> => {
 
 environmentCommand
   .command("create <projectName> [name]")
-  .description("Create a new environment (name is optional, will use .env filename if not provided)")
+  .description(
+    "Create a new environment (name is optional, will use .env filename if not provided)"
+  )
   .requiredOption("-e, --env <path>", "Path to .env file with variables")
   .action(async (projectName, name, options) => {
     try {
@@ -243,7 +244,8 @@ environmentCommand
       const variables = parseEnvFile(options.env);
 
       // If name is not provided, use the filename without extension
-      const envName = name || path.basename(options.env, path.extname(options.env));
+      const envName =
+        name || path.basename(options.env, path.extname(options.env));
 
       console.log("Parsed variables:");
       console.table(variables);
@@ -275,15 +277,19 @@ environmentCommand
   });
 
 environmentCommand
-  .command("delete <name>")
-  .description("Delete an environment by name")
-  .action(async (name) => {
+  .command("delete <projectName> <envName>")
+  .description("Delete an environment by project name and environment name")
+  .action(async (projectName, envName) => {
     try {
-      await api.delete(`/cli/environment/${encodeURIComponent(name)}`);
+      await api.delete(
+        `/cli/environment/${encodeURIComponent(
+          projectName
+        )}/${encodeURIComponent(envName)}`
+      );
       console.log("Environment deleted successfully");
     } catch (error: any) {
       if (error.response?.status === 404) {
-        console.error("Environment not found");
+        console.error("Project or environment not found");
       } else {
         console.error(
           "Error deleting environment:",
@@ -306,9 +312,19 @@ environmentCommand
       const projectResponse = await api.get(
         `/cli/project/${encodeURIComponent(projectName)}`
       );
-      const project = projectResponse.data;
+      const project = projectResponse.data as {
+        id: string;
+        name: string;
+        createdAt: string;
+        updatedAt: string;
+        userId: string;
+      };
 
-      const environment = project.environments.find(
+      const environmentsResponse = await api.get(
+        `/cli/environment/${encodeURIComponent(project.name)}`
+      );
+      const environments = environmentsResponse.data;
+      const environment = environments.find(
         (env: any) => env.name === environmentName
       );
       if (!environment) {
@@ -318,11 +334,7 @@ environmentCommand
         return;
       }
 
-      // Get the environment details with variables
-      const response = await api.get(
-        `/cli/environment/single/${environment.id}`
-      );
-      const variables = response.data.variables;
+      const variables = environment.variables;
 
       // Create .env file content
       const envContent = Object.entries(variables)

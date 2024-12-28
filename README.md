@@ -11,30 +11,20 @@ A command-line interface tool for managing environment variables across differen
 - 📝 .env File Support
 - 🏷️ Project Name Support
 - 🔄 Smart Environment Naming
+- 📋 Variable Preview Before Creation
 
 ## Installation
 
 ```bash
-# Clone the repository
+# Install from npm (once published)
+npm install -g @your-scope/env-manager-cli
+
+# Or install from source:
 git clone <your-repo-url>
-
-# Install dependencies
+cd env-manager-cli
 npm install
-
-# Build the project
 npm run build
-
-# Link the CLI globally (optional)
 npm link
-```
-
-## Configuration
-
-The CLI can be configured using environment variables:
-
-```bash
-API_URL=http://your-api-url    # Default: http://localhost:3000
-CLI_COMMAND_NAME=customname    # Default: envmanager
 ```
 
 ## Usage
@@ -57,91 +47,94 @@ envmanager token remove
 ### Project Management
 
 ```bash
-# List all projects (shows id and name)
+# List all projects (shows ID, name, and associated environments)
 envmanager project list
 
 # Find a project by name
-envmanager project find "Project Name"
+envmanager project find <n>
 
 # Create a new project
-envmanager project create "My New Project"
+envmanager project create <n>
 
-# Delete a project by name
-envmanager project delete "Project Name"
+# Delete a project
+envmanager project delete <n>
 ```
 
 ### Environment Management
 
 ```bash
-# List environments for a project (shows id, name, and variables)
-envmanager environment list "Project Name"
+# List environments for a project (shows ID, name, and project)
+envmanager environment list <project-name>
 
-# Create a new environment with variables from .env file
-envmanager environment create "Project Name" "Environment Name" -e path/to/.env
-envmanager environment create "Project Name" -e production.env              # Will create "production" environment
-envmanager environment create "Project Name" -e ./config/staging.env       # Will create "staging" environment
+# Create a new environment from .env file
+# Shows parsed variables before creation for verification
+envmanager environment create <project-name> [env-name] -e ./env-file.env
 
-# Delete an environment by name
-envmanager environment delete "Environment Name"
+# Examples:
+envmanager environment create "my-project" "prod" -e ./prod.env     # Named environment
+envmanager environment create "my-project" -e ./staging.env         # Uses "staging" as name
 
-# Download environment variables to a .env file
-envmanager environment download "Project Name" "Environment Name"
-envmanager environment download "Project Name" "Environment Name" -f custom.env
+# Delete an environment (requires both project and environment names)
+envmanager environment delete <project-name> <env-name>
+
+# Download environment variables
+envmanager environment download <project-name> <env-name>           # Downloads to <env-name>.env
+envmanager environment download <project-name> <env-name> -f path   # Downloads to specified path
 ```
 
-#### Creating Environments with Variables
+## Environment File Format
 
-When creating a new environment, you need to provide a .env file containing the environment variables. The environment name is optional - if not provided, the CLI will use the .env file's name (without extension) as the environment name.
-
-The file should follow the standard .env format:
+When creating environments, your .env file should follow the standard format:
 
 ```env
-# Example .env file
+# Comments are supported and will be ignored
 DATABASE_URL=postgresql://user:pass@localhost:5432/db
 API_KEY=your-api-key
-NODE_ENV=production
-# Lines starting with # are ignored
-KEY_WITH_EQUALS=value=with=equals=signs
+
+# Values can contain equals signs
+COMPLEX_VALUE=key=value=something
+
+# Values can be quoted (quotes will be removed)
+SECRET="my secret value"
+OTHER_SECRET='another secret'
+
+# Empty lines are ignored
 ```
 
-Examples:
-```bash
-# Specify environment name explicitly
-envmanager environment create "My Project" "Production" -e ./prod.env
-
-# Use file name as environment name
-envmanager environment create "My Project" -e ./production.env     # Creates "production" environment
-envmanager environment create "My Project" -e staging.env          # Creates "staging" environment
-envmanager environment create "My Project" -e ./config/dev.env    # Creates "dev" environment
-```
-
-#### Downloading Environment Variables
-
-You can download environment variables to a .env file using the download command. By default, it will create a file named `<environment-name>.env` in the current directory. You can specify a custom filename using the `-f` or `--file` option:
-
-```bash
-# Download to default filename (Production.env)
-envmanager environment download "My Project" "Production"
-
-# Download to custom filename
-envmanager environment download "My Project" "Production" -f ./config/prod.env
-```
-
-## Token Storage
+## Token Storage Location
 
 Your API token is stored securely in:
 - macOS/Linux: `~/.env-manager/token.json`
 - Windows: `%USERPROFILE%\.env-manager\token.json`
 
+## Error Handling
+
+The CLI provides clear error messages for common scenarios:
+- Invalid API token
+- Project not found
+- Environment not found
+- Invalid .env file format
+- Network connectivity issues
+
 ## Development
 
 ```bash
+# Install dependencies
+npm install
+
 # Build the project
 npm run build
 
-# Run in development mode
-npm start
+# Run tests (if implemented)
+npm test
+
+# Link for local development
+npm link
 ```
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## License
 

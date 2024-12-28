@@ -2,32 +2,51 @@
   "name": "cli-env-manager",
   "version": "1.0.0",
   "main": "dist/index.js",
+  "bin": {
+    "envmanager": "./dist/index.js"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
   "author": {
     "name": "Nika Nishnianidze",
     "email": "nika.nishnianidze.10@gmail.com",
-    "url": "https://github.com/Yolosopher",
-    "github": "https://github.com/Yolosopher",
-    "website": "https://yolosopher.site"
+    "url": "https://github.com/Yolosopher"
   },
   "scripts": {
     "build": "tsup src/index.ts --format cjs --dts",
-    "start": "ts-node src/index.ts"
+    "start": "ts-node src/index.ts",
+    "prepublishOnly": "npm run build"
   },
-  "keywords": [],
-  "license": "ISC",
-  "description": "",
-  "devDependencies": {
-    "@types/node": "^22.10.2",
-    "ts-node": "^10.9.2",
-    "tsup": "^8.3.5",
-    "typescript": "^5.7.2"
+  "homepage": "https://github.com/Yolosopher/cli-env-manager",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Yolosopher/cli-env-manager.git"
   },
-  "bin": {
-    "envmanager": "dist/index.js"
+  "bugs": {
+    "url": "https://github.com/Yolosopher/cli-env-manager/issues"
   },
+  "keywords": [
+    "cli",
+    "environment-variables",
+    "env-manager",
+    "project-management",
+    "environment-management",
+    "dotenv",
+    "env",
+    "configuration"
+  ],
+  "license": "MIT",
+  "description": "A command-line interface tool for managing environment variables across different projects and environments.",
   "dependencies": {
-    "axios": "^1.7.9",
-    "commander": "^12.1.0",
-    "dotenv": "^16.4.7"
+    "axios": "^1.x",
+    "commander": "^11.x"
+  },
+  "devDependencies": {
+    "@types/node": "^20.x",
+    "ts-node": "^10.x",
+    "tsup": "^8.x",
+    "typescript": "^5.x"
   }
 }
